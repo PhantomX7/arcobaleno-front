@@ -3,7 +3,7 @@
 		black = 50;
 </script>
 
-<div class="relative pt-1">
+<div class="relative pt-1" style="z-index: 0;">
 	<div class="overflow-hidden h-6 text-xs flex rounded bg-amber-200" style="min-width: 300px">
 		<div
 			style="width: {red}%"

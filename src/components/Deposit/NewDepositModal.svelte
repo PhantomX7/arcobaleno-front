@@ -15,7 +15,7 @@
 
 	let error = '';
 
-	const { addNotification } = getNotificationsContext();
+	const { addNotification, subscribe } = getNotificationsContext();
 	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues: {
 			email: 'test@gmail.com',

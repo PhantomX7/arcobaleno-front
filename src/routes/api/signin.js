@@ -4,7 +4,7 @@ import { URL } from '@env';
 
 export async function post(req) {
 	const [response, err] = await runPromise(
-		axios.post(`${URL}/public/auth/signup`, {
+		axios.post(`${URL}/public/auth/signin`, {
 			...req.body,
 		}),
 	);

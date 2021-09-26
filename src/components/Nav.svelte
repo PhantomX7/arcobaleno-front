@@ -1,15 +1,24 @@
 <script>
 	import { goto } from '$app/navigation';
+	import { session, page } from '$app/stores';
 	import { getContext } from 'svelte';
+	import axios from 'axios';
+
 	import Login from '@components/Auth/Login.svelte';
+	import Button from '@components/Button.svelte';
+	import Spinner from '@components/Spinner.svelte';
+	import { runPromise, formatNumber, clickOutside } from '@helpers';
+
 	const { open } = getContext('simple-modal');
 	const showLogin = () => {
 		open(Login, {});
 	};
 	let openMenu = false;
+	let openUserDrawer = false;
 </script>
 
-<nav class="bg-white shadow fixed w-full z-50">
+<!-- {JSON.stringify($session)} -->
+<nav class="bg-white shadow fixed w-full z-10">
 	<div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
 		<div class="relative flex justify-between h-16">
 			<div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -70,13 +79,17 @@
 					</svg>
 				</button>
 			</div>
-			<div class="flex-1 flex items-center justify-center sm:items-stretch sm:justify-start">
-				<div class="flex-shrink-0 flex items-center text-2xl">Capjikia</div>
+			<div class="flex-1 flex ml-11 sm:items-stretch sm:justify-start sm:ml-0">
+				<div class="flex-shrink-0 flex items-center text-2xl">
+					<a href="/">Capjikia</a>
+				</div>
 				<div class="hidden sm:ml-6 sm:flex sm:space-x-8">
 					<!-- Current: "border-indigo-500 text-gray-900", Default: "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700" -->
 					<a
-						href="#"
-						class="border-red-400 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						href="/"
+						class="{$page.path == '/'
+							? ''
+							: 'border-transparent'}border-red-400 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
 					>
 						Dashboard
 					</a>
@@ -103,20 +116,73 @@
 			<div
 				class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0"
 			>
-				<button
-					type="button"
-					on:click={() => goto('/daftar')}
-					class="mr-5 inline-flex items-center px-3.5 py-2 border border-transparent text-sm leading-4 font-medium rounded-full shadow-sm text-white bg-red-400 hover:bg-red-500"
-				>
-					Daftar
-				</button>
-				<button
-					type="button"
-					on:click={showLogin}
-					class="inline-flex items-center px-3.5 py-2 border border-transparent text-sm leading-4 font-medium rounded-full shadow-sm text-white bg-red-400 hover:bg-red-500"
-				>
-					Masuk
-				</button>
+				{#if !$session.authenticated}
+					<Button className="mr-3" on:click={() => goto('/daftar')}>Daftar</Button>
+					<Button className="" on:click={showLogin}>Masuk</Button>
+				{:else}
+					{#if $session.user}
+						<div class="hidden sm:block mr-4 relative">
+							<button
+								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100 "
+								on:click={(e) => {
+									e.stopPropagation();
+									openUserDrawer = !openUserDrawer;
+								}}
+							>
+								Saldo : Rp {formatNumber($session.user.wallet.amount)}
+							</button>
+							<div
+								class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none {openUserDrawer
+									? 'block'
+									: 'hidden'}"
+								role="menu"
+								aria-orientation="vertical"
+								aria-labelledby="user-menu-button"
+								tabindex="-1"
+								use:clickOutside={() => {
+									openUserDrawer = false;
+								}}
+							>
+								<!-- Active: "bg-gray-100", Not Active: "" -->
+								<a
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+									role="menuitem"
+									tabindex="-1"
+									href="/deposit"
+									on:click={() => {
+										openUserDrawer = false;
+									}}
+									id="user-menu-item-0">Deposit</a
+								>
+								<a
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+									role="menuitem"
+									tabindex="-1"
+									href="/withdraw"
+									on:click={() => {
+										openUserDrawer = false;
+									}}
+									id="user-menu-item-1">Withdraw</a
+								>
+							</div>
+						</div>
+					{:else}
+						<button
+							class="justify-center mr-3 inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
+						>
+							<Spinner color="#000" />
+						</button>
+					{/if}
+					<Button
+						className="mr-3"
+						on:click={async () => {
+							await runPromise(axios.post(`api/signout`));
+
+							$session.token = '';
+							$session.authenticated = false;
+						}}>Keluar</Button
+					>
+				{/if}
 			</div>
 		</div>
 	</div>

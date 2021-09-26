@@ -5,10 +5,10 @@ const arcobaleno = (session, config = {}) => {
   return axios.create({
     baseURL: URL,
     headers: {
-      authorization: `Bearer ${session.ADMIN_TOKEN}`,
+      authorization: `Bearer ${session.token}`,
     },
     ...config,
   });
 };
-''
+
 export default arcobaleno;

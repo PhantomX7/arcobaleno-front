@@ -1,26 +1,3 @@
-<script context="module">
-	/**
-	 * @type {import('@sveltejs/kit').Load}
-	 */
-	export async function load({ page, fetch, session, context }) {
-		const url = `/api/auth`;
-		const res = await fetch(url, { method: 'post' });
-
-		if (res.ok) {
-			return {
-				props: {
-					data: await res.json(),
-				},
-			};
-		}
-
-		return {
-			status: res.status,
-			error: new Error(`Could not load ${url}`),
-		};
-	}
-</script>
-
 <script>
 	import { URL } from '@env';
 	import ResultTable from '@components/ResultTable.svelte';

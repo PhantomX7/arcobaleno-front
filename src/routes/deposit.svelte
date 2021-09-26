@@ -1,6 +1,6 @@
 <script context="module">
 	export async function load({ session }) {
-		if (session.authenticated) {
+		if (!session.authenticated) {
 			return {
 				status: 301,
 				redirect: '/',
@@ -18,8 +18,11 @@
 	import { getNotificationsContext } from 'svelte-notifications';
 	import axios from 'axios';
 	import { session } from '$app/stores';
+	import { browser } from '$app/env';
 
 	import Input from '@components/Input.svelte';
+	import ListTable from '@components/Deposit/ListTable.svelte';
+
 	import Button from '@components/Button.svelte';
 	import { runPromise } from '@helpers';
 
@@ -104,97 +107,39 @@
 			goto('/');
 		},
 	});
+
+	if (browser) {
+		$session.refreshDeposit = true;
+	}
+
+	$: if (browser && $session.refreshDeposit) {
+		$session.refreshDeposit = false;
+		(async function () {
+			const [response, err] = await runPromise(
+				arcobaleno($session).get(`/public/deposit-confirmation`),
+			);
+			if (err) {
+				console.log('error when fetching user data');
+			}
+			$session.user = response.data;
+		})();
+	}
 </script>
 
 <svelte:head>
-	<title>Daftar Capjikia</title>
+	<title>Deposit Capjikia</title>
 </svelte:head>
 
-<section class="container p-6 py-12 mx-auto">
-	<div class="my-8 sm:mx-auto sm:w-full sm:max-w-md">
-		<div class="bg-white pt-2 px-4 shadow sm:rounded-lg sm:px-10 pb-5">
-			<div class="text-center bg-white px-3 py-3 border-b border-gray-200 sm:px-6">
-				<h3 class="text-2xl leading-6 font-medium text-gray-900">Daftar</h3>
-			</div>
-			<form class="space-y-6 mt-5" on:submit={handleSubmit}>
-				<Input
-					label="Email"
-					name="email"
-					placeholder="contoh@gmail.com"
-					type="text"
-					on:change={handleChange}
-					bind:value={$form.email}
-					error={$errors.email}
-				/>
-				<Input
-					label="Nama"
-					name="name"
-					placeholder="Budi"
-					type="text"
-					on:change={handleChange}
-					bind:value={$form.name}
-					error={$errors.name}
-				/>
-				<Input
-					label="No. Handphone"
-					name="phone"
-					placeholder="821xxxxxxxx"
-					type="tel"
-					lead="+62"
-					on:change={handleChange}
-					bind:value={$form.phone}
-					error={$errors.phone}
-				/>
-				<Input
-					label="Nama Bank"
-					name="bank_name"
-					placeholder="BCA"
-					type="text"
-					on:change={handleChange}
-					bind:value={$form.bank_name}
-					error={$errors.bank_name}
-				/>
-				<Input
-					label="Nomor Rekening Bank"
-					name="bank_number"
-					placeholder="412341134"
-					type="text"
-					on:change={handleChange}
-					bind:value={$form.bank_number}
-					error={$errors.bank_number}
-				/>
-				<Input
-					label="Nama Pemilik Rekening Bank"
-					name="bank_owner"
-					placeholder="Budi"
-					type="text"
-					on:change={handleChange}
-					bind:value={$form.bank_owner}
-					error={$errors.bank_owner}
-				/>
-				<Input
-					label="Password"
-					name="password"
-					placeholder="**********"
-					type="password"
-					on:change={handleChange}
-					bind:value={$form.password}
-					error={$errors.password}
-				/>
-				<Input
-					label="Konfirmasi Password"
-					name="confirm_password"
-					placeholder="**********"
-					type="password"
-					on:change={handleChange}
-					bind:value={$form.confirm_password}
-					error={$errors.confirm_password}
-				/>
-
-				<div class="text-center">
-					<Button fullWidth={true} type="submit" loading={$isSubmitting}>Daftar</Button>
-				</div>
-			</form>
+<section class="container p-6 py-12 mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
+	<div class="mt-10 md:flex md:items-center md:justify-between">
+		<div class="flex-1 min-w-0">
+			<h2 class="text-2xl font-bold leading-7 text-gray-900 sm:text-3xl sm:truncate">Deposit</h2>
 		</div>
+		<div class="mt-4 flex md:mt-0 md:ml-4">
+			<Button fullWidth={false} type="submit" loading={$isSubmitting}>Deposit Baru</Button>
+		</div>
+	</div>
+	<div class="my-8">
+		<ListTable />
 	</div>
 </section>
