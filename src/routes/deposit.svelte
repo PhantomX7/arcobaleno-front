@@ -1,53 +1,61 @@
 <script context="module">
-	export async function load({ session }) {
+	export async function load({ session, page }) {
 		if (!session.authenticated) {
 			return {
 				status: 301,
 				redirect: '/',
 			};
 		}
+
+		let deposit = { data: [], meta: {} };
+
+		session.refreshDeposit = false;
+		const [response, err] = await runPromise(
+			arcobaleno(session).get(
+				generateIndexUrl(`/public/deposit-confirmation`, queryString.parse(page.query.toString())),
+			),
+		);
+		if (err) {
+			console.log('error when fetching deposit data');
+			return {
+				status: 200,
+				props: {
+					deposit,
+				},
+			};
+		}
+
+		deposit = response.data;
+
 		return {
 			status: 200,
+			props: {
+				deposit,
+			},
 		};
 	}
 </script>
 
 <script>
-	import { session } from '$app/stores';
-	import { browser } from '$app/env';
+	import { page } from '$app/stores';
 	import { getContext } from 'svelte';
+	import queryString from 'query-string';
 
 	import arcobaleno from '@api/arcobaleno';
 
 	import NewDepositModal from '@components/Deposit/NewDepositModal.svelte';
 	import ListTable from '@components/Deposit/ListTable.svelte';
 	import Button from '@components/Button.svelte';
+	import Pagination from '@components/Pagination.svelte';
 
-	import { runPromise } from '@helpers';
+	import { runPromise, generateIndexUrl } from '@helpers';
 
 	const { open } = getContext('simple-modal');
 	const showNewDeposit = () => {
 		open(NewDepositModal, {});
 	};
 
-	if (browser) {
-		$session.refreshDeposit = true;
-	}
-
-	let deposit = [];
-
-	$: if (browser && $session.refreshDeposit) {
-		$session.refreshDeposit = false;
-		(async function () {
-			const [response, err] = await runPromise(
-				arcobaleno($session).get(`/public/deposit-confirmation`),
-			);
-			if (err) {
-				console.log('error when fetching user data');
-			}
-			deposit = response.data;
-		})();
-	}
+	export let deposit;
 </script>
 
 <svelte:head>
@@ -65,5 +73,10 @@
 	</div>
 	<div class="my-8">
 		<ListTable data={deposit.data} />
+		<Pagination
+			meta={deposit.meta}
+			query={queryString.parse($page.query.toString())}
+			url="deposit"
+		/>
 	</div>
 </section>

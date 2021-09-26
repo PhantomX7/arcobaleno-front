@@ -5,7 +5,6 @@
 	import { createForm } from 'svelte-forms-lib';
 	import { getNotificationsContext } from 'svelte-notifications';
 	import { session } from '$app/stores';
-	import { goto } from '$app/navigation';
 
 	import arcobaleno from '@api/arcobaleno';
 	import { runPromise, formatNumber } from '@helpers';
@@ -72,10 +71,10 @@
 				}
 
 				addNotification({
-					text: 'Berhasil masuk',
+					text: 'Deposit berhasil dibuat, mohon menunggu untuk diproses',
 					type: 'success',
 					position: 'top-center',
-					removeAfter: 3000,
+					removeAfter: 5000,
 				});
 				close();
 				$session.refreshDeposit = true;
@@ -162,7 +161,7 @@
 				</div>
 			{/if}
 			<div class="text-center">
-				<Button fullWidth={true} type="submit" loading={$isSubmitting}>Masuk</Button>
+				<Button fullWidth={true} type="submit" loading={$isSubmitting}>Kirim</Button>
 			</div>
 		</div>
 	</form>
