@@ -1,9 +1,14 @@
 <script>
 	import _ from 'lodash';
 	import moment from 'moment';
+	import { getContext } from 'svelte';
 	import { formatNumber } from '@helpers';
 
+	import ImageModal from '@components/ImageModal.svelte';
+
 	export let data = [];
+
+	const { open } = getContext('simple-modal');
 
 	const getColor = (status) => {
 		switch (status) {
@@ -17,7 +22,7 @@
 	};
 </script>
 
-<div class="shadow border-b border-gray-200 rounded-lg w-full">
+<div class="shadow border-b border-gray-200 rounded-lg w-full overflow-auto">
 	<table class=" min-w-full divide-y divide-gray-200">
 		<thead class="bg-gray-50">
 			<tr class="overflow-hidden">
@@ -50,15 +55,17 @@
 		<tbody class="bg-white divide-y divide-gray-200 text-xs">
 			{#if data.length == 0}
 				<tr>
-		 			<td colspan="8" class="text-xl px-3 py-4 whitespace-nowrap text-center">
+					<td colspan="8" class="text-xl px-3 py-4 whitespace-nowrap text-center">
 						Belum ada riwayat deposit
 					</td>
 				</tr>
 			{/if}
 			{#each data as d}
 				<tr>
-					<td class="px-3 py-4 whitespace-nowrap">{moment(d.created_at).format('LLL')}</td>
-					<td class="px-3 py-4 whitespace-nowrap"
+					<td class="px-3 py-4 text-center whitespace-nowrap"
+						>{moment(d.created_at).format('LLL')}</td
+					>
+					<td class="px-3 py-4 text-center whitespace-nowrap"
 						><span
 							class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {getColor(
 								d.status,
@@ -67,12 +74,20 @@
 							{d.status}
 						</span></td
 					>
-					<td class="px-3 py-4 whitespace-nowrap">{d.method}</td>
-					<td class="px-3 py-4 whitespace-nowrap">Rp {formatNumber(d.amount)}</td>
-					<td class="px-3 py-4 whitespace-nowrap">{d.rate}</td>
-					<td class="px-3 py-4 whitespace-nowrap">Rp {formatNumber(d.final_amount)}</td>
-					<td class="px-3 py-4 whitespace-nowrap">{d.note}</td>
-					<td class="px-3 py-4 whitespace-nowrap">{d.deposit_image_url}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">{d.method}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">Rp {formatNumber(d.amount)}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">{d.rate}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">Rp {formatNumber(d.final_amount)}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">{d.note}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap"
+						><div
+							class="cursor-pointer justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
+							on:click={() => open(ImageModal, { src: d.deposit_image_url })}
+						>
+							<i class="fa fa-upload fa-2xl" aria-hidden="true" />
+							Lihat gambar
+						</div></td
+					>
 				</tr>
 			{/each}
 		</tbody>

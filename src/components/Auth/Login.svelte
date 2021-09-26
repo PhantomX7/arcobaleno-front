@@ -32,12 +32,6 @@
 			const [response, err] = await runPromise(axios.post(`api/signin`, values));
 			if (err) {
 				error = 'Email dan password tidak sesuai';
-				addNotification({
-					text: 'Email dan password tidak sesuai',
-					type: 'error',
-					position: 'top-center',
-					removeAfter: 3000,
-				});
 				return;
 			}
 			$session.token = response.data.token;

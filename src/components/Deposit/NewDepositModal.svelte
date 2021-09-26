@@ -1,85 +1,160 @@
 <script>
+	import _ from 'lodash';
 	import * as yup from 'yup';
-	import { getContext } from 'svelte';
+	import { getContext, onMount } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import { getNotificationsContext } from 'svelte-notifications';
-	import axios from 'axios';
 	import { session } from '$app/stores';
 	import { goto } from '$app/navigation';
 
+	import arcobaleno from '@api/arcobaleno';
+	import { runPromise, formatNumber } from '@helpers';
+
 	import Input from '@components/Input.svelte';
+	import Select from '@components/Select.svelte';
 	import Button from '@components/Button.svelte';
-	import { runPromise } from '@helpers';
+	import ImageUploader from '@components/ImageUploader.svelte';
+	import AutoNumeric from 'autonumeric/dist/autoNumeric.min';
 
 	const { close } = getContext('simple-modal');
 
 	let error = '';
+	let deposits = [];
+	let selectedDeposit;
 
-	const { addNotification, subscribe } = getNotificationsContext();
+	const { addNotification } = getNotificationsContext();
+	onMount(async () => {
+		new AutoNumeric.multiple('.number', {
+			decimalPlaces: 0,
+			digitGroupSeparator: '.',
+			decimalCharacter: ',',
+		});
+		const [response, err] = await runPromise(arcobaleno($session).get(`/public/deposit`));
+		if (err) {
+			console.log('error when fetching deposit data');
+		}
+		deposits = response.data.data;
+	});
+
 	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues: {
-			email: 'test@gmail.com',
-			password: 'q1w2e3r4',
+			amount: '0',
+			image: '',
+			deposit_id: 0,
+			note: '',
 		},
 		validationSchema: yup.object().shape({
-			email: yup.string().required('Email tidak boleh kosong').email(),
-			password: yup
-				.string()
-				.required('Password tidak boleh kosong')
-				.min(8, 'Password minimal 8 karakter'),
+			image: yup.string().required('Bukti Pembayaran tidak boleh kosong'),
+			note: yup.string().max(32, 'Maksimal 32 karakter'),
+			amount: yup.number().min(10, 'Jumlah deposit minimum 10.000'),
+			deposit_id: yup.number().min(1, 'Metode pembayaran harus dipilih'),
 		}),
 		onSubmit: async (values) => {
-			const [response, err] = await runPromise(axios.post(`api/signin`, values));
-			if (err) {
-				error = 'Email dan password tidak sesuai';
+			try {
+				values.amount = values.amount * 1000 * selectedDeposit.rate;
+
+				let formData = new FormData();
+				_.forEach(values, function (value, key) {
+					formData.append(key, value);
+				});
+
+				const [response, err] = await runPromise(
+					arcobaleno($session).post(`/public/deposit-confirmation`, formData, {
+						headers: {
+							'Content-Type': 'multipart/form-data',
+						},
+					}),
+				);
+				if (err) {
+					error = err.response.data.message;
+
+					return;
+				}
+
 				addNotification({
-					text: 'Email dan password tidak sesuai',
-					type: 'error',
+					text: 'Berhasil masuk',
+					type: 'success',
 					position: 'top-center',
 					removeAfter: 3000,
 				});
-				return;
+				close();
+				$session.refreshDeposit = true;
+			} catch (e) {
+				console.log(e);
 			}
-			$session.token = response.data.token;
-			$session.authenticated = true;
-
-			addNotification({
-				text: 'Berhasil masuk',
-				type: 'success',
-				position: 'top-center',
-				removeAfter: 3000,
-			});
-			close();
-			goto('/');
 		},
 	});
+
+	$: if (deposits.length > 0) {
+		selectedDeposit = _.filter(deposits, (d) => d.id == $form.deposit_id)[0];
+	}
 </script>
 
 <div class="bg-white">
 	<div class="">
 		<div class="text-center bg-white px-3 py-3 border-b border-gray-200 sm:px-6">
-			<h3 class="text-2xl leading-6 font-medium text-gray-900">Masuk</h3>
+			<h3 class="text-2xl leading-6 font-medium text-gray-900">Deposit Baru</h3>
 		</div>
 	</div>
 	<form on:submit={handleSubmit}>
 		<div class=" px-4 py-5 sm:p-6 overflow-y-auto" style="max-height:400px;">
-			<Input
-				label="Email"
-				name="email"
-				placeholder="contoh@gmail.com"
-				type="text"
+			<Select
+				label="Metode Pembayaran"
+				name="deposit_id"
+				placeholder="Pilih Metode"
+				options={_.map(deposits, (d) => ({ name: d.name, value: d.id }))}
 				on:change={handleChange}
-				bind:value={$form.email}
-				error={$errors.email}
+				bind:value={$form.deposit_id}
+				error={$errors.deposit_id}
+			/>
+			{#if $form.deposit_id}
+				<div class="pl-4 py-3 my-2 text-sm shadow border-b border-gray-200 rounded-lg">
+					<div>
+						Atas Nama : {selectedDeposit.account_owner}
+					</div>
+					<div>
+						No Rekening : {selectedDeposit.account_number}
+					</div>
+					Rate: {selectedDeposit.rate * 100}%
+					<div />
+				</div>
+			{/if}
+			<Input
+				label="Jumlah Deposit"
+				name="amount"
+				placeholder="100.000,00"
+				type="text"
+				className="number"
+				on:change={handleChange}
+				bind:value={$form.amount}
+				error={$errors.amount}
+			/>
+			<div class="pl-4 pb-2">
+				Contoh: setoran deposit 50.000, tulis Rp 50 ( 3 digit dihilangkan )
+			</div>
+			<Input
+				label="Jumlah Yang Diterima"
+				placeholder="100.000,00"
+				type="text"
+				disabled
+				lead="Rp"
+				on:change={handleChange}
+				value={selectedDeposit ? formatNumber($form.amount * selectedDeposit.rate * 1000) : 0}
 			/>
 			<Input
-				label="Password"
-				name="password"
-				placeholder="**********"
-				type="password"
+				label="Catatan"
+				name="note"
+				placeholder="Max 32 karakter"
+				type="text"
 				on:change={handleChange}
-				bind:value={$form.password}
-				error={$errors.password}
+				bind:value={$form.note}
+				error={$errors.note}
+			/>
+			<ImageUploader
+				name="Upload bukti pembayaran"
+				bind:value={$form.image}
+				error={$errors.image}
+				label="Upload"
 			/>
 			{#if error}
 				<div class="pb-3">

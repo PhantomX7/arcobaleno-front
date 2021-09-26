@@ -10,7 +10,7 @@
 
 <div
 	class="mt-20 max-w-sm w-full bg-white shadow-lg rounded-lg pointer-events-auto ring-1 ring-black ring-opacity-5 overflow-hidden"
-	style="z-index: 100;"
+	style="z-index: 1003;"
 >
 	<div class="p-4">
 		<div class="flex items-start">

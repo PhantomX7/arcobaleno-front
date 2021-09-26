@@ -123,7 +123,7 @@
 					{#if $session.user}
 						<div class="hidden sm:block mr-4 relative">
 							<button
-								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100 "
+								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
 								on:click={(e) => {
 									e.stopPropagation();
 									openUserDrawer = !openUserDrawer;

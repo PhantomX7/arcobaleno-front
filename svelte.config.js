@@ -12,6 +12,7 @@ const config = {
 					'@api': path.resolve('./src/api'),
 					'@components': path.resolve('./src/components'),
 					'@helpers': path.resolve('./src/helpers'),
+					'@node_modules': path.resolve('./node_modules'),
 				},
 			},
 		},
