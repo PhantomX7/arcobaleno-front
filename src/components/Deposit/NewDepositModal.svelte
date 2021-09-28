@@ -46,12 +46,14 @@
 		validationSchema: yup.object().shape({
 			image: yup.string().required('Bukti Pembayaran tidak boleh kosong'),
 			note: yup.string().max(32, 'Maksimal 32 karakter'),
-			amount: yup.number().min(10, 'Jumlah deposit minimum 10.000'),
+			amount: yup.string()
+				.test('is-number', 'Harap masukkan angka', (v) => !isNaN(v.replaceAll('.', '')))
+				.test('minimum', 'Minimum deposit sebesar Rp 10.000 ', (v) => parseInt(v.replaceAll('.', '')) >= 10),
 			deposit_id: yup.number().min(1, 'Metode pembayaran harus dipilih'),
 		}),
 		onSubmit: async (values) => {
 			try {
-				values.amount = values.amount * 1000 * selectedDeposit.rate;
+				values.amount = values.amount.replaceAll('.', '') * 1000 * selectedDeposit.rate;
 
 				let formData = new FormData();
 				_.forEach(values, function (value, key) {
@@ -139,7 +141,9 @@
 				disabled
 				lead="Rp"
 				on:change={handleChange}
-				value={selectedDeposit ? formatNumber($form.amount * selectedDeposit.rate * 1000) : 0}
+				value={selectedDeposit
+					? formatNumber($form.amount.replaceAll('.', '') * selectedDeposit.rate * 1000)
+					: 0}
 			/>
 			<Input
 				label="Catatan"

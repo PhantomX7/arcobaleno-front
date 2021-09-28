@@ -9,9 +9,9 @@
 	onMount(() => {
 		// create a ticker on an element with options
 		if (browser) {
-			var element = document.querySelector('#ticker');
-			console.log(element);
-			var tick = Tick.DOM.create(element, {
+			let element = document.querySelector('#ticker');
+
+			let tick = Tick.DOM.create(element, {
 				value: 1000,
 				view:
 					// definition for top level tick element
@@ -66,10 +66,11 @@
 					},
 
 				didInit: function (tick) {
+					let timeDuration = Tick.helper.duration(10, 'seconds');
 					// add 24 hours to get final deadline
-					var deadline = new Date(offset.setMilliseconds(offset.getMilliseconds()));
+					let deadline = new Date(offset.setMilliseconds(offset.getMilliseconds() + timeDuration));
 					// create counter
-					var counter = Tick.count.down(deadline, { format: ['h', 'm', 's'] });
+					let counter = Tick.count.down(deadline, { format: ['h', 'm', 's'] });
 					// update tick with the counter value
 					counter.onupdate = function (value) {
 						tick.value = {
@@ -96,5 +97,4 @@
 <div id="ticker" class="tick max-w-md w-full" />
 
 <style>
-	
 </style>
