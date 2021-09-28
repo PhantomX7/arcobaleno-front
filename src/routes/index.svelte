@@ -1,6 +1,72 @@
+<script context="module">
+	export async function load({ session }) {
+		let cjkResult = { data: [], meta: {} };
+		let nextResult = '';
+
+		session.refreshCjkResult = false;
+		let [response, err] = await runPromise(
+			arcobaleno(session).get(
+				`/public/cjk-result?created_at=${moment()
+					.subtract(7, 'days')
+					.format('YYYY-MM-DD')},${moment().format('YYYY-MM-DD')}&sort=created_at%20desc&limit=100`,
+			),
+		);
+		if (err) {
+			console.log('error when fetching cjk result data');
+			return {
+				status: 200,
+				props: {
+					cjkResult,
+				},
+			};
+		}
+
+		cjkResult = response.data;
+
+		[response, err] = await runPromise(arcobaleno(session).get(`/public/cjk-result/next`));
+		if (err) {
+			console.log('error when fetching cjk result next');
+			return {
+				status: 200,
+				props: {
+					cjkResult,
+					nextResult,
+				},
+			};
+		}
+
+		nextResult = response.data;
+
+		return {
+			status: 200,
+			props: {
+				cjkResult,
+				nextResult,
+			},
+		};
+	}
+</script>
+
 <script>
-	import { URL } from '@env';
+	import moment from 'moment';
+	import arcobaleno from '@api/arcobaleno';
+	import { browser } from '$app/env';
+	import { session } from '$app/stores';
+	import { getContext } from 'svelte';
+
+	import Login from '@components/Auth/Login.svelte';
+	import Button from '@components/Button.svelte';
+	import Bet from '@components/Dashboard/Bet.svelte';
+	import BetTutorial from '@components/Dashboard/BetTutorial.svelte';
 	import ResultTable from '@components/ResultTable.svelte';
+	import Countdown from '@components/Countdown.svelte';
+
+	import { runPromise } from '@helpers';
+
+	const { open } = getContext('simple-modal');
+
+	export let cjkResult = [];
+	export let nextResult = new Date();
 </script>
 
 <svelte:head>
@@ -10,8 +76,21 @@
 <!--Hero-->
 <div class="pt-24 bg-red-300 px-5 h-full">
 	<!--Left Col-->
+	<div
+		class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+	>
+		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
+			Jadwal Pengumuman Prediksi Selanjutnya
+		</h1>
+		<div class="w-full mb-4">
+			<div class="h-1 mx-auto bg-white w-64 my-0 py-0 rounded-t" />
+		</div>
+		{#if browser}
+			<Countdown offset={new Date(nextResult)} />
+		{/if}
+	</div>
 	<div class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center">
-		<ResultTable />
+		<ResultTable data={cjkResult.data} />
 	</div>
 </div>
 <div class="relative bg-red-300">
@@ -47,7 +126,44 @@
 </div>
 <section class="bg-white border-b py-8">
 	<div class="container max-w-5xl mx-auto m-8">
-		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">Pricing</h1>
+		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
+			Pembelian Kontrak
+		</h1>
+	</div>
+	<div class="w-full mb-4">
+		<div class="h-1 mx-auto bg-red-400 w-64 opacity-25 my-0 py-0 rounded-t" />
+	</div>
+	<div
+		class="container pt-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+	>
+			<h2>Dapatkan 12x dari nilai kontrak apa bila sesuai dengan prediksi <strong>(Biaya admin 5% untuk setiap kontrak yang dimenangkan)</strong></h2>
+	</div>
+	<div
+		class="container px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+	>
+			<h2>Berikut merupakan cara pembelian kontrak:</h2>
+	</div>
+	<div
+		class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+	>
+		<div class="max-w-sm">
+			<BetTutorial />
+		</div>
+	</div>
+	<div
+		class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+	>
+		{#if !$session.authenticated}
+			Klik tombol
+			<Button className="mx-2" on:click={() => goto('/daftar')}>Daftar</Button>
+			atau
+			<Button className="mx-2" on:click={() => open(Login, {})}>Masuk</Button>
+			untuk melanjutkan
+		{:else}
+			<div>
+				<Bet />
+			</div>
+		{/if}
 	</div>
 </section>
 

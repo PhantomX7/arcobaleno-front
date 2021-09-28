@@ -1,5 +1,6 @@
 <script>
 	import '../app.postcss';
+	
 	import Notifications from 'svelte-notifications';
 	import { setLocale } from 'yup';
 	import { session } from '$app/stores';

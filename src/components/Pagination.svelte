@@ -33,7 +33,7 @@
 				goto(generatePaginationUrl(url, parseInt(page) - 1, limit, { ...query }));
 			}}
 		>
-			Prev
+			{'<'}
 		</button>
 		{#if page != 1}
 			<button
@@ -79,7 +79,7 @@
 				goto(generatePaginationUrl(url, parseInt(page) + 1, limit, { ...query }));
 			}}
 		>
-			Next
+			{'>'}
 		</button>
 	</div>
 </div>

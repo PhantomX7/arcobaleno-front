@@ -4,6 +4,8 @@
 	import { getContext, onMount } from 'svelte';
 	import { createForm } from 'svelte-forms-lib';
 	import { getNotificationsContext } from 'svelte-notifications';
+	import AutoNumeric from 'autonumeric/dist/autoNumeric.min';
+
 	import { session } from '$app/stores';
 
 	import arcobaleno from '@api/arcobaleno';
@@ -13,7 +15,6 @@
 	import Select from '@components/Select.svelte';
 	import Button from '@components/Button.svelte';
 	import ImageUploader from '@components/ImageUploader.svelte';
-	import AutoNumeric from 'autonumeric/dist/autoNumeric.min';
 
 	const { close } = getContext('simple-modal');
 
