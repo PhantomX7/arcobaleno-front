@@ -9,7 +9,6 @@
 		"format": "prettier --ignore-path .gitignore --write --plugin-search-dir=. ."
 	},
 	"devDependencies": {
-		"@pqina/flip": "^1.7.7",
 		"@sveltejs/kit": "next",
 		"@tailwindcss/forms": "^0.3.3",
 		"autoprefixer": "^10.3.4",

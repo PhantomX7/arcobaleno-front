@@ -4,7 +4,6 @@
 	import { browser } from '$app/env';
 
 	export let offset = new Date();
-	import Tick from '@pqina/flip';
 
 	onMount(() => {
 		// create a ticker on an element with options
