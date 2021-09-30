@@ -91,7 +91,7 @@
 		<h1 class="w-full my-2 text-2xl sm:text-4xl font-bold leading-tight text-center text-gray-800">
 			Jadwal Pengumuman Prediksi Selanjutnya
 		</h1>
-		<div class="w-full mb-4">
+		<div class="w-full mb-8">
 			<div class="h-1 mx-auto bg-white w-64 my-0 py-0 rounded-t" />
 		</div>
 		{#if browser}
@@ -136,7 +136,7 @@
 
 <section class="bg-white border-b py-8">
 	<div class="container max-w-5xl mx-auto m-8">
-		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
+		<h1 class="w-full my-2 text-2xl sm:text-4xl font-bold leading-tight text-center text-gray-800">
 			Pembelian Kontrak
 		</h1>
 	</div>
@@ -183,7 +183,7 @@
 
 <section class="bg-gray-50 py-8 px-8 sm:px-36">
 	<div class="container mx-auto px-2 pt-4 pb-12 text-gray-800">
-		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
+		<h1 class="w-full my-2 text-2xl sm:text-4xl font-bold leading-tight text-center text-gray-800">
 			Metode Pembayaran
 		</h1>
 		<div class="w-full mb-4">

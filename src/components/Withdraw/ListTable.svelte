@@ -38,28 +38,13 @@
 		<thead class="bg-gray-50">
 			<tr class="overflow-hidden">
 				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Tanggal Deposit</th
+					>Tanggal Withdraw</th
 				>
 				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
 					>Status</th
 				>
 				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Metode</th
-				>
-				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
 					>Jumlah</th
-				>
-				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Rate</th
-				>
-				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Jumlah Final</th
-				>
-				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Catatan</th
-				>
-				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
-					>Gambar Bukti</th
 				>
 			</tr>
 		</thead>
@@ -85,20 +70,7 @@
 							{getText(d.status)}
 						</span></td
 					>
-					<td class="px-3 py-4 text-center whitespace-nowrap">{d.method}</td>
 					<td class="px-3 py-4 text-center whitespace-nowrap">Rp {formatNumber(d.amount)}</td>
-					<td class="px-3 py-4 text-center whitespace-nowrap">{d.rate}</td>
-					<td class="px-3 py-4 text-center whitespace-nowrap">Rp {formatNumber(d.final_amount)}</td>
-					<td class="px-3 py-4 text-center whitespace-nowrap">{d.note}</td>
-					<td class="px-3 py-4 text-center whitespace-nowrap"
-						><div
-							class="cursor-pointer justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
-							on:click={() => open(ImageModal, { src: d.deposit_image_url })}
-						>
-							<i class="fa fa-upload fa-2xl" aria-hidden="true" />
-							Lihat gambar
-						</div></td
-					>
 				</tr>
 			{/each}
 		</tbody>

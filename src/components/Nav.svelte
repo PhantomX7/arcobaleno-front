@@ -3,7 +3,7 @@
 	import { session, page } from '$app/stores';
 	import { getContext } from 'svelte';
 	import axios from 'axios';
-	
+
 	import { user } from '@store';
 
 	import Login from '@components/Auth/Login.svelte';
@@ -89,29 +89,29 @@
 					<a
 						href="/"
 						class="{$page.path == '/'
-							? ''
-							: 'border-transparent'}border-red-400 text-gray-900 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+							? 'border-red-400 text-red-400'
+							: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
 					>
 						Dashboard
 					</a>
-					<!-- <a
-						href="#"
-						class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-					>
-						Team
-					</a>
-					<a
-						href="#"
-						class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-					>
-						Projects
-					</a>
-					<a
-						href="#"
-						class="border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-					>
-						Calendar
-					</a> -->
+					{#if $session.authenticated}
+						<a
+							href="transaksi"
+							class="{$page.path == '/transaksi'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Transksi
+						</a>
+						<a
+							href="/transaction"
+							class="{$page.path == '/riwayat'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Riwayat
+						</a>
+					{/if}
 				</div>
 			</div>
 			<div
@@ -159,6 +159,16 @@
 									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
 									role="menuitem"
 									tabindex="-1"
+									href="/mutasi"
+									on:click={() => {
+										openUserDrawer = false;
+									}}
+									id="user-menu-item-0">Mutasi</a
+								>
+								<a
+									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
+									role="menuitem"
+									tabindex="-1"
 									href="/withdraw"
 									on:click={() => {
 										openUserDrawer = false;
@@ -193,20 +203,34 @@
 		<div class="pt-2 pb-4 space-y-1">
 			<!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
 			<a
-				href="#"
-				class="bg-indigo-50 border-indigo-500 text-indigo-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				href="/"
+				class="{$page.path == '/'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'}  block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
 				>Dashboard</a
 			>
 			<a
-				href="#"
-				class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-				>Team</a
+				href="/deposit"
+				class="{$page.path == '/deposit'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Deposit</a
 			>
 			<a
-				href="#"
-				class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
-				>Projects</a
+				href="/transaksi"
+				class="{$page.path == '/transaksi'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Withdraw</a
 			>
+			<a
+				href="/transaksi"
+				class="{$page.path == '/transaksi'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Transaksi</a
+			>
+			
 			<a
 				href="#"
 				class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
