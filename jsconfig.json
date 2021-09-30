@@ -9,6 +9,7 @@
 			"@components": ["src/components"],
 			"@helpers": ["src/helpers"],
 			"@node_modules": ["node_modules"],
+			"@store": ["src/store"]
 		}
 	},
 	"include": ["src/**/*.d.ts", "src/**/*.js", "src/**/*.svelte"]

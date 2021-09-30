@@ -53,7 +53,7 @@
 		}),
 		onSubmit: async (values) => {
 			try {
-				values.amount = values.amount.replaceAll('.', '') * 1000 * selectedDeposit.rate;
+				values.amount = values.amount.replaceAll('.', '') * 1000;
 
 				let formData = new FormData();
 				_.forEach(values, function (value, key) {

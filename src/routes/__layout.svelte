@@ -1,16 +1,14 @@
 <script>
 	import '../app.postcss';
-	
+
 	import Notifications from 'svelte-notifications';
 	import { setLocale } from 'yup';
 	import { session } from '$app/stores';
-	import { runPromise } from '@helpers';
-	import { browser } from '$app/env';
+	import { user } from '@store';
 
 	import Modal from '@components/Modal.svelte';
 	import Nav from '@components/Nav.svelte';
 	import Notification from '@components/Notification.svelte';
-	import arcobaleno from '@api/arcobaleno';
 
 	setLocale({
 		mixed: {
@@ -25,19 +23,8 @@
 		},
 	});
 
-	if (browser) {
-		$session.refreshUser = true;
-	}
-
-	$: if ($session.authenticated && browser && $session.refreshUser) {
-		$session.refreshUser = false;
-		(async function () {
-			const [response, err] = await runPromise(arcobaleno($session).get(`/public/user`));
-			if (err) {
-				console.log('error when fetching user data');
-			}
-			$session.user = response.data;
-		})();
+	$: if ($session.authenticated) {
+		user.fetch($session);
 	}
 </script>
 

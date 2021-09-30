@@ -252,9 +252,6 @@
 <slot />
 
 <style>
-	* {
-		/* box-sizing: border-box; */
-	}
 	.bg {
 		position: fixed;
 		z-index: 1000;

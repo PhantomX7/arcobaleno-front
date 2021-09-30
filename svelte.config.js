@@ -13,6 +13,7 @@ const config = {
 					'@components': path.resolve('./src/components'),
 					'@helpers': path.resolve('./src/helpers'),
 					'@node_modules': path.resolve('./node_modules'),
+					'@store': path.resolve('./src/store'),
 				},
 			},
 		},

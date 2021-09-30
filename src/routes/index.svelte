@@ -3,7 +3,6 @@
 		let cjkResult = { data: [], meta: {} };
 		let nextResult = '';
 
-		session.refreshCjkResult = false;
 		let [response, err] = await runPromise(
 			arcobaleno(session).get(
 				`/public/cjk-result?created_at=${moment()
@@ -49,13 +48,17 @@
 
 <script>
 	import moment from 'moment';
-	import arcobaleno from '@api/arcobaleno';
+	import { goto } from '$app/navigation';
 	import { browser } from '$app/env';
 	import { session } from '$app/stores';
 	import { getContext } from 'svelte';
+	import arcobaleno from '@api/arcobaleno';
+
+	import { cjkStory } from '@store';
 
 	import Login from '@components/Auth/Login.svelte';
 	import Button from '@components/Button.svelte';
+	import Quote from '@components/Quote.svelte';
 	import Bet from '@components/Dashboard/Bet.svelte';
 	import BetTutorial from '@components/Dashboard/BetTutorial.svelte';
 	import ResultTable from '@components/ResultTable.svelte';
@@ -67,6 +70,8 @@
 
 	export let cjkResult = [];
 	export let nextResult = new Date();
+
+	cjkStory.fetch($session);
 </script>
 
 <svelte:head>
@@ -75,11 +80,15 @@
 
 <!--Hero-->
 <div class="pt-24 bg-red-300 px-5 h-full">
+	<!-- <section class="bg-white border-b py-8"> -->
+	<!-- </section> -->
 	<!--Left Col-->
 	<div
-		class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
+		class="container py-4 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
 	>
-		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
+		<Quote content={$cjkStory ? $cjkStory[`story${parseInt(Math.ceil((moment().hour()+1) / 2))}`] : ''} />
+
+		<h1 class="w-full my-2 text-2xl sm:text-4xl font-bold leading-tight text-center text-gray-800">
 			Jadwal Pengumuman Prediksi Selanjutnya
 		</h1>
 		<div class="w-full mb-4">
@@ -124,6 +133,7 @@
 		</g>
 	</svg>
 </div>
+
 <section class="bg-white border-b py-8">
 	<div class="container max-w-5xl mx-auto m-8">
 		<h1 class="w-full my-2 text-5xl font-bold leading-tight text-center text-gray-800">
@@ -136,12 +146,16 @@
 	<div
 		class="container pt-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
 	>
-			<h2>Dapatkan 12x dari nilai kontrak apa bila sesuai dengan prediksi <strong>(Biaya admin 5% untuk setiap kontrak yang dimenangkan)</strong></h2>
+		<h2>
+			Dapatkan 12x dari nilai kontrak apa bila sesuai dengan prediksi <strong
+				>(Biaya admin 5% untuk setiap kontrak yang dimenangkan)</strong
+			>
+		</h2>
 	</div>
 	<div
 		class="container px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
 	>
-			<h2>Berikut merupakan cara pembelian kontrak:</h2>
+		<h2>Berikut merupakan cara pembelian kontrak:</h2>
 	</div>
 	<div
 		class="container py-8 px-5 mx-auto flex flex-wrap flex-col md:flex-row items-center justify-center"
@@ -263,7 +277,7 @@
 			<div class="flex-1 mb-6 text-black">
 				<a
 					class="text-pink-600 no-underline hover:no-underline font-bold text-2xl lg:text-4xl"
-					href="#"
+					href="/"
 				>
 					<!--Icon from: http://www.potlabicons.com/ -->
 					<svg
@@ -291,17 +305,17 @@
 				<p class="uppercase text-gray-500 md:mb-6">Links</p>
 				<ul class="list-reset mb-6">
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>FAQ</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Help</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Support</a
 						>
 					</li>
@@ -311,12 +325,12 @@
 				<p class="uppercase text-gray-500 md:mb-6">Legal</p>
 				<ul class="list-reset mb-6">
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Terms</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Privacy</a
 						>
 					</li>
@@ -326,17 +340,17 @@
 				<p class="uppercase text-gray-500 md:mb-6">Social</p>
 				<ul class="list-reset mb-6">
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Facebook</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Linkedin</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Twitter</a
 						>
 					</li>
@@ -346,17 +360,17 @@
 				<p class="uppercase text-gray-500 md:mb-6">Company</p>
 				<ul class="list-reset mb-6">
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Official Blog</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>About Us</a
 						>
 					</li>
 					<li class="mt-2 inline-block mr-2 md:block md:mr-0">
-						<a href="#" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
+						<a href="/" class="no-underline hover:underline text-gray-800 hover:text-pink-500"
 							>Contact</a
 						>
 					</li>

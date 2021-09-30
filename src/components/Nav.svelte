@@ -3,6 +3,8 @@
 	import { session, page } from '$app/stores';
 	import { getContext } from 'svelte';
 	import axios from 'axios';
+	
+	import { user } from '@store';
 
 	import Login from '@components/Auth/Login.svelte';
 	import Button from '@components/Button.svelte';
@@ -119,7 +121,7 @@
 					<Button className="mr-3" on:click={() => goto('/daftar')}>Daftar</Button>
 					<Button className="" on:click={showLogin}>Masuk</Button>
 				{:else}
-					{#if $session.user}
+					{#if $user}
 						<div class="hidden sm:block mr-4 relative">
 							<button
 								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
@@ -128,7 +130,7 @@
 									openUserDrawer = !openUserDrawer;
 								}}
 							>
-								Saldo : Rp {formatNumber($session.user.wallet.amount)}
+								Saldo : Rp {formatNumber($user.wallet.amount)}
 							</button>
 							<div
 								class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none {openUserDrawer
