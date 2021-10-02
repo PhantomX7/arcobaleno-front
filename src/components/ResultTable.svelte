@@ -1,77 +1,20 @@
 <script>
 	import _ from 'lodash';
 	import ProgressBar from '@components/ProgressBar.svelte';
-	// let data = [
-	// 	{
-	// 		created_at: '2021-09-20T13:51:54Z',
-	// 		result: 'm5',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:30:05Z',
-	// 		result: 'h2',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:30:00Z',
-	// 		result: 'h3',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:29:55Z',
-	// 		result: 'm1',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:29:09Z',
-	// 		result: 'm6',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:29:04Z',
-	// 		result: 'm4',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-20T13:51:59Z',
-	// 		result: 'h5',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:51:54Z',
-	// 		result: 'm1',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:30:05Z',
-	// 		result: 'h1',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:30:00Z',
-	// 		result: 'h3',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:29:55Z',
-	// 		result: 'm2',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:29:09Z',
-	// 		result: 'm3',
-	// 	},
-	// 	{
-	// 		created_at: '2021-09-19T13:29:04Z',
-	// 		result: 'm5',
-	// 	},
-	// ];
 
 	export let data = [];
 
-	const groups = data.reduce((groups, game) => {
-		const date = game.created_at.split('T')[0];
-		if (!groups[date]) {
-			groups[date] = [];
-		}
-		groups[date].unshift(game);
-		return groups;
-	}, {});
-
-	// _.forEach(groups, (_, v) => {
-	// 	v.sort(function (a, b) {
-	// 		return new Date(b.date) - new Date(a.date);
-	// 	});
-	// });
+	let sortedGroups;
+	$: {
+		sortedGroups = data.reduce((groups, game) => {
+			const date = game.created_at.split('T')[0];
+			if (!groups[date]) {
+				groups[date] = [];
+			}
+			groups[date].unshift(game);
+			return groups;
+		}, {});
+	}
 </script>
 
 <div class="shadow border-b border-gray-200 rounded-lg overflow-auto w-full">
@@ -104,7 +47,14 @@
 			</tr>
 		</thead>
 		<tbody class="bg-white divide-y divide-gray-200">
-			{#each Object.entries(groups) as [date, contents]}
+			{#if !sortedGroups}
+				<tr>
+					<td colspan="8" class="text-xl px-3 py-4 whitespace-nowrap text-center">
+						Riwayat tidak ditemukan
+					</td>
+				</tr>
+			{/if}
+			{#each Object.entries(sortedGroups) as [date, contents]}
 				<tr>
 					<td class="px-6 py-4 whitespace-nowrap">{date}</td>
 					{#each Array(12) as _, i}

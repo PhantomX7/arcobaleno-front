@@ -44,7 +44,6 @@
 				removeAfter: 3000,
 			});
 			close();
-			goto('/');
 		},
 	});
 </script>
