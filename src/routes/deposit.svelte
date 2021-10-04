@@ -9,7 +9,6 @@
 
 		let deposit = { data: [], meta: {} };
 
-		session.refreshDeposit = false;
 		const [response, err] = await runPromise(
 			arcobaleno(session).get(
 				generateIndexUrl(`/public/deposit-confirmation`, queryString.parse(page.query.toString())),

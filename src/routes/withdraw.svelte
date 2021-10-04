@@ -9,7 +9,6 @@
 
 		let withdraw = { data: [], meta: {} };
 
-		session.refreshWithdraw = false;
 		const [response, err] = await runPromise(
 			arcobaleno(session).get(
 				generateIndexUrl(`/public/withdraw-request`, queryString.parse(page.query.toString())),
@@ -51,9 +50,6 @@
 	import { runPromise, generateIndexUrl } from '@helpers';
 
 	const { open } = getContext('simple-modal');
-	// const showNewWithdraw = () => {
-		
-	// };
 
 	export let withdraw;
 </script>

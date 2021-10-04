@@ -56,7 +56,6 @@
 
 <script>
 	import { page } from '$app/stores';
-	import { getContext } from 'svelte';
 	import queryString from 'query-string';
 
 	import arcobaleno from '@api/arcobaleno';
@@ -65,8 +64,6 @@
 	import Pagination from '@components/Pagination.svelte';
 
 	import { runPromise, generateIndexUrl, formatNumber } from '@helpers';
-
-	const { open } = getContext('simple-modal');
 
 	export let transaction = { data: [], meta: {} };
 	export let total = 0;

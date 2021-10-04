@@ -7,9 +7,10 @@
 	import AutoNumeric from 'autonumeric/dist/autoNumeric.min';
 
 	import { session } from '$app/stores';
+	import { goto } from '$app/navigation';
 
 	import arcobaleno from '@api/arcobaleno';
-	import { runPromise, formatNumber } from '@helpers';
+	import { runPromise } from '@helpers';
 
 	import Input from '@components/Input.svelte';
 	import Button from '@components/Button.svelte';
@@ -32,9 +33,14 @@
 			amount: '0',
 		},
 		validationSchema: yup.object().shape({
-			amount: yup.string()
+			amount: yup
+				.string()
 				.test('is-number', 'Harap masukkan angka', (v) => !isNaN(v.replaceAll('.', '')))
-				.test('minimum', 'Minimum withdraw sebesar Rp 10.000 ', (v) => parseInt(v.replaceAll('.', '')) >= 10000)
+				.test(
+					'minimum',
+					'Minimum withdraw sebesar Rp 10.000 ',
+					(v) => parseInt(v.replaceAll('.', '')) >= 10000,
+				),
 		}),
 		onSubmit: async (values) => {
 			try {
@@ -66,7 +72,7 @@
 				});
 
 				close();
-				$session.refreshWithdraw = true;
+				goto('/withdraw');
 			} catch (e) {
 				console.log(e);
 			}

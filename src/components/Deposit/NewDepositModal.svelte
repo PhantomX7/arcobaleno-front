@@ -6,6 +6,7 @@
 	import { getNotificationsContext } from 'svelte-notifications';
 	import AutoNumeric from 'autonumeric/dist/autoNumeric.min';
 
+	import { goto } from '$app/navigation';
 	import { session } from '$app/stores';
 
 	import arcobaleno from '@api/arcobaleno';
@@ -46,9 +47,14 @@
 		validationSchema: yup.object().shape({
 			image: yup.string().required('Bukti Pembayaran tidak boleh kosong'),
 			note: yup.string().max(32, 'Maksimal 32 karakter'),
-			amount: yup.string()
+			amount: yup
+				.string()
 				.test('is-number', 'Harap masukkan angka', (v) => !isNaN(v.replaceAll('.', '')))
-				.test('minimum', 'Minimum deposit sebesar Rp 10.000 ', (v) => parseInt(v.replaceAll('.', '')) >= 10),
+				.test(
+					'minimum',
+					'Minimum deposit sebesar Rp 10.000 ',
+					(v) => parseInt(v.replaceAll('.', '')) >= 10,
+				),
 			deposit_id: yup.number().min(1, 'Metode pembayaran harus dipilih'),
 		}),
 		onSubmit: async (values) => {
@@ -80,7 +86,7 @@
 					removeAfter: 5000,
 				});
 				close();
-				$session.refreshDeposit = true;
+				goto('/deposit');
 			} catch (e) {
 				console.log(e);
 			}
