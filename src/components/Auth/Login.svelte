@@ -36,6 +36,7 @@
 			}
 			$session.token = response.data.token;
 			$session.authenticated = true;
+			$session.fetchUser = true;
 
 			addNotification({
 				text: 'Berhasil masuk',
