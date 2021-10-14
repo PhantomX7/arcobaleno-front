@@ -185,6 +185,13 @@
 								>
 							</div>
 						</div>
+						<div class="block sm:hidden mr-4 relative">
+							<button
+								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
+							>
+								Saldo : Rp {formatNumber($user.wallet.amount)}
+							</button>
+						</div>
 					{:else}
 						<button
 							class="justify-center mr-3 inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
@@ -193,7 +200,7 @@
 						</button>
 					{/if}
 					<Button
-						className="mr-3"
+						className="hidden sm:block mr-3"
 						on:click={async () => {
 							await runPromise(axios.post(`api/signout`));
 
@@ -251,6 +258,19 @@
 					? 'bg-red-50 border-red-400 text-red-700'
 					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
 				>Riwayat</a
+			>
+			<a
+				href="/"
+				on:click={async () => {
+					await runPromise(axios.post(`api/signout`));
+
+					$session.token = '';
+					$session.authenticated = false;
+				}}
+				class="{$page.path == '/keluar'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Keluar</a
 			>
 		</div>
 	</div>

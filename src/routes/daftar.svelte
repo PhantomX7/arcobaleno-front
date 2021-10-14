@@ -26,26 +26,26 @@
 	const { addNotification } = getNotificationsContext();
 
 	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
-		initialValues: {
-			email: 'test@gmail.com',
-			phone: '132412341234',
-			name: 'hehe',
-			password: 'q1w2e3r4',
-			confirm_password: 'q1w2e3r4',
-			bank_name: 'test',
-			bank_number: '12341234',
-			bank_owner: 'test',
-		},
 		// initialValues: {
-		// 	email: '',
-		// 	phone: '',
-		// 	name: '',
-		// 	password: '',
-		// 	confirm_password: '',
-		// 	bank_name: '',
-		// 	bank_number: '',
-		// 	bank_owner: '',
+		// 	email: 'test@gmail.com',
+		// 	phone: '132412341234',
+		// 	name: 'hehe',
+		// 	password: 'q1w2e3r4',
+		// 	confirm_password: 'q1w2e3r4',
+		// 	bank_name: 'test',
+		// 	bank_number: '12341234',
+		// 	bank_owner: 'test',
 		// },
+		initialValues: {
+			email: '',
+			phone: '',
+			name: '',
+			password: '',
+			confirm_password: '',
+			bank_name: '',
+			bank_number: '',
+			bank_owner: '',
+		},
 		validationSchema: yup.object().shape({
 			email: yup.string().required('Email tidak boleh kosong').email(),
 			phone: yup
