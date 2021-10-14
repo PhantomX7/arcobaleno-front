@@ -74,6 +74,7 @@
 					confirm_password: 'Konfirmasi password harus sama dengan password',
 				});
 			}
+			values.phone = `62${values.phone}`;
 
 			const [response, err] = await runPromise(axios.post(`api/signup`, values));
 			if (err) {

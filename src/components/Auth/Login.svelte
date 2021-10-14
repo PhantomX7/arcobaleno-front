@@ -18,9 +18,13 @@
 	const { addNotification } = getNotificationsContext();
 	const { form, errors, isSubmitting, handleChange, handleSubmit } = createForm({
 		initialValues: {
-			email: 'test@gmail.com',
-			password: 'q1w2e3r4',
+			email: '',
+			password: '',
 		},
+		// initialValues: {
+		// 	email: 'test@gmail.com',
+		// 	password: 'q1w2e3r4',
+		// },
 		validationSchema: yup.object().shape({
 			email: yup.string().required('Email tidak boleh kosong').email(),
 			password: yup
