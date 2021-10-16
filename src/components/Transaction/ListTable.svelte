@@ -35,6 +35,9 @@
 					>Total Nilai Kontrak</th
 				>
 				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+					>Hasil</th
+				>
+				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
 					>Keuntungan</th
 				>
 				<th class="px-3 py-4 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
@@ -84,6 +87,20 @@
 						{/each}
 					</td>
 					<td class="px-3 py-4 text-center whitespace-nowrap">Rp {formatNumber(d.total)}</td>
+					<td class="px-3 py-4 text-center whitespace-nowrap">
+						{#if d.result}
+							<span
+								class="{d.result.result.includes('m')
+									? 'bg-red-500'
+									: 'bg-gray-800'} mx-auto text-white font-bold rounded-full items-center justify-center font-mono text-sm flex"
+								style="height: 30px; width: 30px;"
+							>
+								{d.result.result.includes('m')
+									? d.result.result[1] + 'x'
+									: d.result.result[1] + '='}
+							</span>
+						{/if}
+					</td>
 					<td class="px-3 py-4 text-center whitespace-nowrap"
 						><span
 							class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full {d.gain > 0

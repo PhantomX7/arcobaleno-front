@@ -72,7 +72,8 @@
 				});
 
 				close();
-				goto('/withdraw');
+
+				$session.refreshWithdraw = true;
 			} catch (e) {
 				console.log(e);
 			}

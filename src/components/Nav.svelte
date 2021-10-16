@@ -16,7 +16,6 @@
 		open(Login, {});
 	};
 	let openMenu = false;
-	let openUserDrawer = false;
 </script>
 
 <nav class="bg-white shadow fixed w-full z-10">
@@ -119,6 +118,38 @@
 						>
 							Riwayat
 						</a>
+						<a
+							href="/deposit"
+							class="{$page.path == '/deposit'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Deposit
+						</a>
+						<a
+							href="/mutasi"
+							class="{$page.path == '/mutasi'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Mutasi
+						</a>
+						<a
+							href="/withdraw"
+							class="{$page.path == '/withdraw'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Withdraw
+						</a>
+						<a
+							href="/profil"
+							class="{$page.path.split('/')[1] == 'profil'
+								? 'border-red-400 text-red-400'
+								: 'border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700'} inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+						>
+							Profil
+						</a>
 					{/if}
 				</div>
 			</div>
@@ -130,62 +161,7 @@
 					<Button className="" on:click={showLogin}>Masuk</Button>
 				{:else}
 					{#if $user}
-						<div class="hidden sm:block mr-4 relative">
-							<button
-								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
-								on:click={(e) => {
-									e.stopPropagation();
-									openUserDrawer = !openUserDrawer;
-								}}
-							>
-								Saldo : Rp {formatNumber($user.wallet.amount)}
-							</button>
-							<div
-								class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none {openUserDrawer
-									? 'block'
-									: 'hidden'}"
-								role="menu"
-								aria-orientation="vertical"
-								aria-labelledby="user-menu-button"
-								tabindex="-1"
-								use:clickOutside={() => {
-									openUserDrawer = false;
-								}}
-							>
-								<!-- Active: "bg-gray-100", Not Active: "" -->
-								<a
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-									role="menuitem"
-									tabindex="-1"
-									href="/deposit"
-									on:click={() => {
-										openUserDrawer = false;
-									}}
-									id="user-menu-item-0">Deposit</a
-								>
-								<a
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-									role="menuitem"
-									tabindex="-1"
-									href="/mutasi"
-									on:click={() => {
-										openUserDrawer = false;
-									}}
-									id="user-menu-item-0">Mutasi</a
-								>
-								<a
-									class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer"
-									role="menuitem"
-									tabindex="-1"
-									href="/withdraw"
-									on:click={() => {
-										openUserDrawer = false;
-									}}
-									id="user-menu-item-1">Withdraw</a
-								>
-							</div>
-						</div>
-						<div class="block sm:hidden mr-4 relative">
+						<div class="mr-4 relative">
 							<button
 								class="justify-center inline-flex items-center px-3.5 py-2 shadow border-b border-gray-200 border border-transparent text-sm leading-4 font-medium rounded-full bg-white hover:bg-gray-100"
 							>
@@ -218,6 +194,9 @@
 		<div class="pt-2 pb-4 space-y-1">
 			<!-- Current: "bg-indigo-50 border-indigo-500 text-indigo-700", Default: "border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700" -->
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/"
 				class="{$page.path == '/'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -225,6 +204,19 @@
 				>Dashboard</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
+				href="/beli"
+				class="{$page.path == '/beli'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Beli</a
+			>
+			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/deposit"
 				class="{$page.path == '/deposit'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -232,6 +224,9 @@
 				>Deposit</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/mutasi"
 				class="{$page.path == '/mutasi'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -239,6 +234,9 @@
 				>Mutasi</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/withdraw"
 				class="{$page.path == '/withdraw'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -246,6 +244,9 @@
 				>Withdraw</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/transaksi"
 				class="{$page.path == '/transaksi'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -253,6 +254,9 @@
 				>Transaksi</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/riwayat"
 				class="{$page.path == '/riwayat'
 					? 'bg-red-50 border-red-400 text-red-700'
@@ -260,6 +264,19 @@
 				>Riwayat</a
 			>
 			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
+				href="/profil"
+				class="{$page.path == '/profil'
+					? 'bg-red-50 border-red-400 text-red-700'
+					: 'border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700'} block pl-3 pr-4 py-2 border-l-4 text-base font-medium"
+				>Profil</a
+			>
+			<a
+				on:click={() => {
+					openMenu = !openMenu;
+				}}
 				href="/"
 				on:click={async () => {
 					await runPromise(axios.post(`api/signout`));

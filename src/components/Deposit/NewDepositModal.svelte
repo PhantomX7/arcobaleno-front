@@ -86,7 +86,8 @@
 					removeAfter: 5000,
 				});
 				close();
-				goto('/deposit');
+				
+				$session.refreshDeposit = true;
 			} catch (e) {
 				console.log(e);
 			}

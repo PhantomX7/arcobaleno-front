@@ -7,6 +7,8 @@
 			};
 		}
 
+		session.refreshDeposit = false;
+
 		let deposit = { data: [], meta: {} };
 
 		const [response, err] = await runPromise(
