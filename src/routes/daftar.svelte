@@ -73,6 +73,7 @@
 				errors.set({
 					confirm_password: 'Konfirmasi password harus sama dengan password',
 				});
+				return;
 			}
 			values.phone = `62${values.phone}`;
 
